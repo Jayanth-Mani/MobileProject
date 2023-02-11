@@ -42,10 +42,7 @@ def torque_solve(config, l):
         masses[i] = mass_sum
      # works for two masses per level
     # print(masses)
-    cm_constant = 1
-    if (masses[0] < masses[1]):
-        cm_constant = -1
-    pivot = (2 * masses[1] * l + cm_constant*dowel_mass * l) / (2 * (masses[0] + masses[1] + cm_constant*dowel_mass))
+    pivot = (2 * masses[1] * l + dowel_mass * l) / (2 * (masses[0] + masses[1] + dowel_mass))
     return pivot
 
 def nested_sum(L):
