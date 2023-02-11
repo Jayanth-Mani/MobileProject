@@ -30,37 +30,35 @@ def torque_solve(config, l):
     l: length of dowel
     returns distance from left end of dowel of pivot
     """
-    masses = [None] * (len(config) - 1)
     dowel_mass = config[-1]
-    masses_without_dowel = config[:-1]
-    for i, values in enumerate(masses_without_dowel):
-        if isinstance(values, list): 
-            # print(values)
-            mass_sum = nested_sum(values)
-        else: 
-            mass_sum = values
-        masses[i] = mass_sum
-     # works for two masses per level
-    # print(masses)
+    masses = config[:-1]
+    # works for two masses per level
     pivot = (2 * masses[1] * l + dowel_mass * l) / (2 * (masses[0] + masses[1] + dowel_mass))
-    return pivot
+    return pivot, sum(masses) + dowel_mass
 
-def nested_sum(L):
-    total = 0  # don't use `sum` as a variable name
-    for i in L:
-        if isinstance(i, list):  # checks if `i` is a list
-            total += nested_sum(i)
-        else:
-            total += i
-    return total
 
 #print(torque_solve([[13.1,36.6,6.5], 51.9, 4.8], DOWEL_LENGTH))
-solution = []
+solution = ""
 def solve(config):
-    for i, val in enumerate(config):
-        if isinstance(val, list):
-            solve(val)
-    solution.append(torque_solve(config, DOWEL_LENGTH))
+    mod_config = config.copy()
+    m1 = config[0]
+    m2 = config[1]
+    pivot1 = []
+    pivot2 = []
+    if isinstance(config[0], list):
+        pivot1, m1 = solve(config[0])
+    if isinstance(config[1], list):
+        pivot2, m2 = solve(config[1])
+    mod_config[0] = m1
+    mod_config[1] = m2
+    pivot_val, mass_sum = torque_solve(mod_config, DOWEL_LENGTH)
+    if not pivot1:
+        pivot_res = [pivot2, pivot_val]
+    if not pivot2:
+        pivot_res = [pivot1, pivot_val]
+    if not pivot1 and not pivot2:
+        pivot_res = [pivot_val]
+    return pivot_res, mass_sum
 
-solve([[13.1,[36.6,36.6,4.4],6.5], 51.9, 4.8])
+solution, _ = solve([[13.1,[36.6,36.6,4.4],6.5], 51.9, 4.8])
 print(solution)
