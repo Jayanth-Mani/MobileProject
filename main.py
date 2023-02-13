@@ -1,5 +1,4 @@
-import random
-dowel_masses = {
+DOWEL_MASSES = {
   1: 4.8,
   2: 6.5,
   3: 8.2,
@@ -7,12 +6,12 @@ dowel_masses = {
   5: 7.3,
 }
 
-piece_mass = {
+PIECE_MASSES = {
   "WhiteKing1": 51.9,
   "WhiteKnight2": 10.6,
   "BlackKnight3": 36.6,
   "BlackBishop4": 13.1,
-  "BlacPawn5": 15.4,
+  "BlackPawn5": 15.4,
   "BlackRook6": 36.6,
   "WhitePawn7": 15.0,
   "BlackQueen8": 46.7,
@@ -25,31 +24,31 @@ piece_mass = {
 DOWEL_LENGTH = 30
 def torque_solve(config, l):
     """
-    Solves for pivot point of dowel, assumption that masses are at end of DOWEL
-    config: list of masses which represents dowel, example [M1, M2, MD], 
+    Solves for pivot point of dowel, assumes that there are two masses per dowel
+    config: list of masses which represents dowel, example [M1, M2, LES, MD], 
     M1: Mass on left side of dowel
     M2: Mass on right side of dowel
-    DW = dowel mass
-    OPTIONAL ARGUMENTS:
-    L1: length from end for M1
-    L2: length from end for M2
+    LES are the lengths of the masses to the end of the dowe;
+    LE1: length from end for M1
+    LE2: length from end for M2
+    MD = dowel mass
     Last argument of config will be dowel's mass
     l: length of dowel
-    returns distance from left end of dowel of pivot
+    returns distance from left end of dowel of pivot, sum of mass one, two, and the dowel as well as a tuple of LEs
+    Example Config: [13.1,36.6, (1,2), 6.5]
+    Mass one is 13.1 grams, Mass two is 3.3 grams
+    Mass one is 1 cm from left end of dowel, Mass two is 2 cm from right end of dowel
+    Mass of the dowel is 6.5 grams
     """
     dowel_mass = config[-1]
-    masses = config[:-1]
-    # works for two masses per level
-    # le1 = random.randint(1,4)
-    # le2 = random.randint(1,4)
-    le1 = 0
-    le2 = 0
-    pivot = ( masses[1] * l + dowel_mass * l / 2 + masses[0] * le1 + masses[1] * le2) / (masses[0] + masses[1] + dowel_mass)
+    les = config[-2]
+    masses = config[:-2]
+    print(les)
+    le1 = les[0]
+    le2 = les[1]
+    pivot = (masses[1] * l + dowel_mass * l / 2 + masses[0] * le1 - masses[1] * le2) / (masses[0] + masses[1] + dowel_mass)
     return pivot, sum(masses) + dowel_mass, (le1, le2)
 
-
-#print(torque_solve([[13.1,36.6,6.5], 51.9, 4.8], DOWEL_LENGTH))
-solution = ""
 def solve(config):
     mod_config = config.copy()
     m1 = config[0]
@@ -63,6 +62,7 @@ def solve(config):
     mod_config[0] = m1
     mod_config[1] = m2
     pivot_val, mass_sum, edge_len = torque_solve(mod_config, DOWEL_LENGTH)
+    pivot_res = [pivot1, pivot2, pivot_val, edge_len]
     if not pivot1:
         pivot_res = [pivot2, pivot_val, edge_len]
     if not pivot2:
@@ -71,5 +71,12 @@ def solve(config):
         pivot_res = [pivot_val, edge_len]
     return pivot_res, mass_sum
 
-solution, _ = solve([[13.1,[36.6,36.6,4.4],6.5], 51.9, 4.8])
+# solution, _ = solve([[13.1,[36.6,36.6,[0,0],4.4],[0,0], 6.5], 51.9,[0,0], 4.8])
+
+test_one = [[PIECE_MASSES["WhiteKing1"], [PIECE_MASSES["BlackKnight3"], PIECE_MASSES["WhiteBishop9"], [1,1], DOWEL_MASSES[3]], [1,1],DOWEL_MASSES[2]], [PIECE_MASSES["BlackQueen8"], [PIECE_MASSES["WhiteRook12"], PIECE_MASSES["BlackPawn5"], [1,1], DOWEL_MASSES[5]], [1,1], DOWEL_MASSES[4]], [1,1], DOWEL_MASSES[1]]
+# print(test_one)
+
+# solution, _ = solve([[13.1,36.6, (0,0), 6.5], 51.9, (0,0), 4.5])
+# solution, _ = solve([[51.9, [36.6, 26.9, [0, 0], 8.2], [0, 0], 6.5], [46.7, [35.9, 15.4, [0, 0], 7.3], [0, 0], 6.2], [0, 0], 4.8])
+solution, _ = solve(test_one)
 print(solution)
