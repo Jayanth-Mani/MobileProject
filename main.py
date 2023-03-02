@@ -71,12 +71,8 @@ def solve(config):
         pivot_res = [pivot_val, edge_len]
     return pivot_res, mass_sum
 
-# solution, _ = solve([[13.1,[36.6,36.6,[0,0],4.4],[0,0], 6.5], 51.9,[0,0], 4.8])
 
-test_one = [[PIECE_MASSES["WhiteKing1"], [PIECE_MASSES["BlackKnight3"], PIECE_MASSES["WhiteBishop9"], [1,1], DOWEL_MASSES[3]], [1,1],DOWEL_MASSES[2]], [PIECE_MASSES["BlackQueen8"], [PIECE_MASSES["WhiteRook12"], PIECE_MASSES["BlackPawn5"], [1,1], DOWEL_MASSES[5]], [1,1], DOWEL_MASSES[4]], [1,1], DOWEL_MASSES[1]]
-# print(test_one)
+configuration = [[PIECE_MASSES["WhiteKing1"], [PIECE_MASSES["BlackKnight3"], PIECE_MASSES["WhiteBishop9"], [1,1], DOWEL_MASSES[3]], [1,1],DOWEL_MASSES[2]], [PIECE_MASSES["BlackQueen8"], [PIECE_MASSES["WhiteRook12"], PIECE_MASSES["BlackPawn5"], [1,1], DOWEL_MASSES[5]], [1,1], DOWEL_MASSES[4]], [1,1], DOWEL_MASSES[1]]
 
-# solution, _ = solve([[13.1,36.6, (0,0), 6.5], 51.9, (0,0), 4.5])
-# solution, _ = solve([[51.9, [36.6, 26.9, [0, 0], 8.2], [0, 0], 6.5], [46.7, [35.9, 15.4, [0, 0], 7.3], [0, 0], 6.2], [0, 0], 4.8])
-solution, _ = solve(test_one)
+solution, _ = solve(configuration)
 print(solution)
